@@ -16,7 +16,22 @@ void *x, *y; /* Declaração antiga do ANSI C, mas muito útil */
 int remove(int x, int *seraconv, int *auxconvidado)
 {
     seraconv[x] = 0;
-    return auxconvidado[x]
+    return auxconvidado[x];
+}
+
+MaximalInducedSubgraph(G, k)
+{
+    if (n<k+1)
+        H = ∅
+    else
+    if(every vertex of G has degree >= k)
+        H = G
+    else
+    {
+        v = vertex wih degree < k
+        H = MaximalInducedSubgraph(G-v, k)
+    }
+    return (H)
 }
 
 int main()
@@ -44,5 +59,6 @@ int main()
 
     qsort(convidado, nconvidados, sizeof(int), compara);
 
+}
 
 }
