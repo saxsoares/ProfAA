@@ -12,6 +12,26 @@ void *x, *y; /* Declaração antiga do ANSI C, mas muito útil */
     else if ( *(int*)x < *(int*)y )
             return -1;
 }
+//
+
+/* representação de uma aresta */
+typedef struct edge* apEdge;
+typedef struct edge {
+int c; /* 'peso' ou 'custo' associado à aresta */
+9
+int v; /* índice do vértice 'destino' */
+apEdge next; /* próxima aresta da lista */
+} edge;
+
+/* descrição de um vértice */
+typedef struct vert {
+int d; /* 'distância' do vértice à 'origem' */
+10
+int r; /* próximo vértice no caminho até a origem */
+int m; /* vértice marcado ? */
+apEdge list; /* lista de arestas */
+} vert;
+
 
 int remove(int x, int *seraconv, int *auxconvidado)
 {
