@@ -23,6 +23,17 @@ typedef struct SGrafo
     Aresta Aresta;
 }TGrafo;
 
+void Inicializa(Grafo G, int npessoas)
+{
+    int i;
+    for(i = 0; i < (npessoas); i++)
+    {
+        G->Pessoa[i].Indicadapor = NULL;
+        G->Aresta[i].next = NULL;
+        G->Aresta[i].id = 0;
+    }
+}
+
 Grafo AlocaG(int n)
 {
     return n > 0 ? (Grafo)malloc(n*sizeof(TGrafo)) : NULL ;
@@ -91,12 +102,8 @@ int main()
     G->Aresta = AlocaA(npessoas);
 
     // Inicializando Pessoas
-    for(i = 0; i < (npessoas); i++)
-    {
-        G->Pessoa[i].Indicadapor = NULL;
-        G->Aresta[i].next = NULL;
-        G->Aresta[i].id = 0;
-    }
+    Inicializa(G, npessoas);
+
 
     for(i = 1; i < (npessoas); i++)
     {
