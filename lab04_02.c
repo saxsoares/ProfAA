@@ -33,6 +33,21 @@ void Inicializa(Grafo G, int npessoas)
         G->Aresta[i].id = 0;
     }
 }
+void InicializaFlags(int *flags, int n)
+{
+    int i;
+    for (i=0; i<n; i++)
+        flags[i] = 0;
+}
+
+void ImprimeFlags(int *flags, int n)
+{
+    int i;
+    printf("%d", flags[1]);
+    for( i=2; i< n; i++)
+        printf(" %d", flags[i]);
+
+}
 
 Grafo AlocaG(int n)
 {
@@ -49,6 +64,11 @@ Aresta AlocaA(int n)
     return (n > 0) ? (Aresta)malloc(n*sizeof(TAresta)) : NULL ;
 }
 
+void AlocaG2(Grafo G, int n)
+{
+    G->Pessoa = AlocaP(n);
+    G->Aresta = AlocaA(n);
+}
 Aresta InsereAresta(int id, Aresta X)
 {
     if(!X)
@@ -73,36 +93,78 @@ void ImprimeAresta(Aresta X)
             ImprimeAresta(X->next);
     }
 }
-//MaximalInducedSubgraph(Grafo G, k)
-//{
-//    if (n<k+1)      // !find 1
-//        H = ∅
-//    else
-//    if(every vertex of G has degree >= k) // !find 0
-//        H = G
-//    else
-//    {
-//        v = vertex wih degree < k
-//        H = MaximalInducedSubgraph(G-v, k)
-//    }
-//    return (H)
-//}
+
+void ImprimeGrafo(Grafo G, int *flags, int n)
+{
+    int i;
+    if(G)
+    {
+        for( i = 1; i<n; i++)
+        {
+            if(flags[i])
+                printf("%d ", i);
+        }
+    }
+}
+
+int find1(int *flags, int n)
+{
+    int i;
+    for(i = 1; i < n; i++)
+        if(flags[i])
+            return i;
+    return 0;
+}
+
+int find0(int *flags, int n)
+{
+    int i;
+    for(i = 1; i < n; i++)
+        if(!flags[i])
+            return i;
+    return 0;
+}
+Grafo MaximalInducedSubgraph(Grafo G, int *flags, int n)
+{
+    Grafo H;
+    int aux;
+    if (!find1(flags, n))      // !find 1
+        H = NULL;
+    else
+    if(!(aux=find0(flags, n))) // !find 0
+        H = G;
+    else
+    {
+
+        //v = vertex wih degree < k
+        //H = MaximalInducedSubgraph(G-v, k)
+    }
+    return (H);
+}
 
 
 int main()
 {
     int npessoas, i, j, k;
     int pessoaid, indica;
+    int *flags;
     Grafo G;
+    Grafo Aux;
     G = AlocaG(1);
+    Aux = AlocaG(1);
 
     scanf("%d", &npessoas);         // primeira entrada, numero de pessoas
     npessoas++;
-    G->Pessoa = AlocaP(npessoas);
-    G->Aresta = AlocaA(npessoas);
+
+    AlocaG2(G, npessoas);
+    AlocaG2(Aux, npessoas);
+
+    flags = malloc(npessoas*sizeof(int));
 
     // Inicializando Pessoas
     Inicializa(G, npessoas);
+    Inicializa(Aux, npessoas)
+    InicializaFlags(flags, npessoas);
 
 
     for(i = 1; i < (npessoas); i++)
@@ -112,13 +174,12 @@ int main()
         G->Pessoa[pessoaid].pindicada = indica;
         // Inserindo Aresta ->indicada por, na pessoa indicada
         G->Pessoa[indica].Indicadapor = InsereAresta(pessoaid, G->Pessoa[indica].Indicadapor); // armazenando na pessoa indicada a pessoa que o indicou
+        flags[indica]++;
     }
 
-      for(i = 1; i < npessoas; i++)
-    {
-        printf("%d %d\n", i, G->Pessoa[i].pindicada);
-        printf("pessoa %d  - \n",i);
-        ImprimeAresta(G->Pessoa[i].Indicadapor);
-        printf("\n");
-    }
+    ImprimeFlags(flags, npessoas);
+    printf("\n");
+    ImprimeGrafo(G, flags, npessoas);
+
+    MaximalInducedSubgraph(G, flags, npessoas);
 }
