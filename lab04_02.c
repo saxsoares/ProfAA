@@ -8,6 +8,12 @@ typedef struct SAresta
     int id;
     Aresta next;
 }TAresta;
+typedef struct SH *H;
+typedef struct SH
+{
+    int id;
+    H next;
+}TH;
 
 typedef struct SPessoa *Pessoa;
 typedef struct SPessoa
@@ -21,6 +27,7 @@ typedef struct SGrafo
 {
     Pessoa Pessoa;
     Aresta Aresta;
+    int *flags;
 }TGrafo;
 
 void Inicializa(Grafo G, int npessoas)
@@ -68,6 +75,7 @@ void AlocaG2(Grafo G, int n)
 {
     G->Pessoa = AlocaP(n);
     G->Aresta = AlocaA(n);
+    G->flags = malloc(n*sizeof(int));
 }
 Aresta InsereAresta(int id, Aresta X)
 {
@@ -148,22 +156,22 @@ int main()
     int npessoas, i, j, k;
     int pessoaid, indica;
     int *flags;
+    int *flag2;
     Grafo G;
-    Grafo Aux;
+    Grafo H;
     G = AlocaG(1);
-    Aux = AlocaG(1);
+    H = AlocaG(1);
 
     scanf("%d", &npessoas);         // primeira entrada, numero de pessoas
-    npessoas++;
+    npessoas++;                 //Desconsiderar posição zero do vetor
 
     AlocaG2(G, npessoas);
-    AlocaG2(Aux, npessoas);
-
+    AlocaG2(H, npessoas);
     flags = malloc(npessoas*sizeof(int));
 
     // Inicializando Pessoas
     Inicializa(G, npessoas);
-    Inicializa(Aux, npessoas)
+    Inicializa(H, npessoas);
     InicializaFlags(flags, npessoas);
 
 
@@ -171,10 +179,11 @@ int main()
     {
         scanf("%d", &pessoaid);     // indice da pessoa atual que fará sua indicação
         scanf("%d", &indica);       // pessoa que a atual indicou
+        flags[indica]++;
         G->Pessoa[pessoaid].pindicada = indica;
         // Inserindo Aresta ->indicada por, na pessoa indicada
-        G->Pessoa[indica].Indicadapor = InsereAresta(pessoaid, G->Pessoa[indica].Indicadapor); // armazenando na pessoa indicada a pessoa que o indicou
-        flags[indica]++;
+        // armazenando na pessoa indicada a pessoa que o indicou
+        G->Pessoa[indica].Indicadapor = InsereAresta(pessoaid, G->Pessoa[indica].Indicadapor);
     }
 
     ImprimeFlags(flags, npessoas);
