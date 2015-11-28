@@ -16,6 +16,7 @@ int main()
     for(k = 0; k < n; k++)
         scanf("%d", &mut[i]);
 
+    // invertendo S
     for(i = 0, j = Slen-1; i < Slen, j >=0; i++, j--)
         Si[i] = S[j];
 
