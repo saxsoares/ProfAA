@@ -9,10 +9,22 @@ typedef struct SAresta
     Aresta next;
 }TAresta;
 
+typedef struct SH *H;
+typedef struct SH
+{
+    int id;
+    int flag;
+    H indicado;
+    H previous;
+    H next;
+}TH;
+typedef struct SH *H;
+
 typedef struct SPessoa *Pessoa;
 typedef struct SPessoa
 {
     int pindicada;
+    int id;
     Aresta Indicadapor;
 }TPessoa;
 
@@ -21,6 +33,7 @@ typedef struct SGrafo
 {
     Pessoa Pessoa;
     Aresta Aresta;
+    int *flags;
 }TGrafo;
 
 void Inicializa(Grafo G, int npessoas)
@@ -33,6 +46,7 @@ void Inicializa(Grafo G, int npessoas)
         G->Aresta[i].id = 0;
     }
 }
+
 void InicializaFlags(int *flags, int n)
 {
     int i;
@@ -68,6 +82,25 @@ void AlocaG2(Grafo G, int n)
 {
     G->Pessoa = AlocaP(n);
     G->Aresta = AlocaA(n);
+    G->flags = malloc(n*sizeof(int));
+}
+void AlocaH(H G)
+{
+    G = (H)malloc(sizeof(TH));
+    G->flag = 1;
+    G->indicado = NULL;
+    G->next = NULL;
+    G->previous = NULL;
+}
+void RemoveH(H G)
+{
+    H aux;
+     if(G)
+    {
+        G->previous->next = G->next;
+        G->indicado->flag--;
+        free(aux);
+    }
 }
 Aresta InsereAresta(int id, Aresta X)
 {
@@ -99,12 +132,22 @@ void ImprimeGrafo(Grafo G, int *flags, int n)
     int i;
     if(G)
     {
-        for( i = 1; i<n; i++)
+        for( i = 1; i<=n; i++)
         {
             if(flags[i])
-                printf("%d ", i);
+                printf("%d ", G->Pessoa[i].id);
         }
     }
+}
+
+void ImprimeGrafoH(Grafo H, int n)
+{
+    int i;
+    if(H)
+    {
+        for( i = 1; i<=n; i++)
+            printf("%d ", H->Pessoa[i].id);
+        }
 }
 
 int find1(int *flags, int n)
@@ -145,25 +188,23 @@ Grafo MaximalInducedSubgraph(Grafo G, int *flags, int n)
 
 int main()
 {
-    int npessoas, i, j, k;
+    int npessoas, i, j, k = 0;
     int pessoaid, indica;
     int *flags;
+    int *flag2;
     Grafo G;
-    Grafo Aux;
+    H ListaH;
     G = AlocaG(1);
-    Aux = AlocaG(1);
+    ListaH = AlocaH;
 
     scanf("%d", &npessoas);         // primeira entrada, numero de pessoas
-    npessoas++;
+    npessoas++;                 //Desconsiderar posição zero do vetor
 
     AlocaG2(G, npessoas);
-    AlocaG2(Aux, npessoas);
-
     flags = malloc(npessoas*sizeof(int));
 
     // Inicializando Pessoas
     Inicializa(G, npessoas);
-    Inicializa(Aux, npessoas)
     InicializaFlags(flags, npessoas);
 
 
@@ -171,15 +212,23 @@ int main()
     {
         scanf("%d", &pessoaid);     // indice da pessoa atual que fará sua indicação
         scanf("%d", &indica);       // pessoa que a atual indicou
+        if(!flags[indica])
+        {
+            InsereH(ListaH, indica);
+        }
+        flags[indica]++;
+        G->Pessoa[pessoaid].id = pessoaid;
         G->Pessoa[pessoaid].pindicada = indica;
         // Inserindo Aresta ->indicada por, na pessoa indicada
-        G->Pessoa[indica].Indicadapor = InsereAresta(pessoaid, G->Pessoa[indica].Indicadapor); // armazenando na pessoa indicada a pessoa que o indicou
-        flags[indica]++;
+        // armazenando na pessoa indicada a pessoa que o indicou
+        G->Pessoa[indica].Indicadapor = InsereAresta(pessoaid, G->Pessoa[indica].Indicadapor);
     }
 
     ImprimeFlags(flags, npessoas);
     printf("\n");
     ImprimeGrafo(G, flags, npessoas);
+    printf("\n");
+    ImprimeGrafoH(H, k);
 
     MaximalInducedSubgraph(G, flags, npessoas);
 }
