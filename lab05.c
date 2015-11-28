@@ -4,7 +4,8 @@
 
 int main()
 {
-    char S[2001], Si[2001], c[2001][2001], b[2001][2001];
+    char S[2001], Si[2001], b[2001][2001];
+    int c[2001][2001];
     int Slen, n, *mut, i, j , k;
 
     scanf("%s", S);
@@ -18,17 +19,7 @@ int main()
     for(i = 0, j = Slen-1; i < Slen, j >=0; i++, j--)
         Si[i] = S[j];
 
-    // testando algo, não leve a sério:
-    if(!strcmp(S, "GATTACA") && n == 0)
-        printf("5");
-    if(!strcmp(S, "GATTACA") && n == 1)
-        printf("1");
-    if(!strcmp(S, "GATTACA") && n == 3)
-        printf("3");
-    if(!strcmp(S, "TATACTATA") && n == 2)
-        printf("7");
 
-    /*
     //para cada posição i, qual o maior palindromo até esse i?
     for(i = 0; i < Slen; i++)
         c[i][0] = 0;
@@ -42,21 +33,21 @@ int main()
             if (S[i] == Si[j])
             {
                 c[i][j] = c[i-1][j-1]+1;
-                b[i][j] = '∖';
+                b[i][j] = 'd';
             }
             else
             if(c[i-1][j] >= c[i][j-1])
             {
                 c[i][j] = c[i-1][j];
-                b[i][j] = '|';
+                b[i][j] = 'v';
             }
             else
             {
                 c[i][j] = c[i][j-1];
-                b[i][j] = '-';
+                b[i][j] = 'h';
             }
         }
     }
-    return c,b; */
+
 }
 
