@@ -27,7 +27,7 @@ typedef struct SPessoa
     int id;
     Aresta Indicadapor;
 }TPessoa;
-
+x'
 typedef struct SGrafo *Grafo;
 typedef struct SGrafo
 {

@@ -7,7 +7,7 @@ int main()
     char S[2001], Si[2001], c[2001][2001], b[2001][2001];
     int Slen, n, *mut, i, j , k;
 
-    scanf("%s", S);
+    //scanf("%s", S);
     Slen = strlen(S);
 
     scanf("%d", &n);
