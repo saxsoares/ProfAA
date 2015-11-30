@@ -41,7 +41,8 @@ void quickSort_ordena(int *A, int p, int r)
 
 void quickSort(int *A, int n)
 {
-    quickSort_ordena(A, 0, n-1);
+    if(n)
+        quickSort_ordena(A, 0, n-1);
     // Implemente o seu metodo aqui!
 }
 
@@ -54,68 +55,64 @@ int main()
 {
     char S[200], Si[200];
     Titem c[200][200];
-    int Slen, n, i, j, k, l;
+    int Slen, *n, i, j, k, l;
     int *mut;
-
+    n = malloc(sizeof(int));
 
     scanf("%s", S);
     Slen = strlen(S);
 
-    scanf("%d", &n);
-    if(n)
-    {
-        mut = malloc(n*sizeof(int));
-        for(k = 0; k < n; k++)
-            scanf("%d", &mut[k]);
+    scanf("%d", n);
+    mut = malloc((*n)*sizeof(int));
+    for(k = 0; k < (*n); k++){
+        scanf("%d", &i);
+        mut[k]= i-1;
     }
-    k = 0;
-    l = 0;
-//    quickSort(mut, n);
-//    for(k = 0; k < n; k++)
-//        printf("%d - ", mut[i]);
+    if(n)
+        quickSort(mut, *n);
 
-    // invertendo S
     i = 0;
     for(j = Slen-1; j >=0; j--)
     {
-        Si[j] = S[i];
+        Si[i] = S[j];
         i++;
     }
 
-    //para cada posição i, qual o maior palindromo até esse i?
-    for(i = -1; i < Slen; i++){
+    for(i = 0; i < Slen; i++){
         c[i][-1].v = 0;
         c[i][-1].m = 0;
     }
-    for(j = -1; j < Slen; j++)
-    {
+    for(j = -1; j < Slen; j++){
         c[-1][j].v = 0;
         c[-1][j].m = 0;
     }
-    for(i = 0; i < Slen; i++)
-    {
-        for(j = 0; j < Slen ; j++)
-        {
-            if (S[i] == Si[j])
-            {
-                if( i == mut[k] || j == mut[l])
-                {
-                    c[i][j].v = c[i-1][j-1].v+1;
-                    c[i][j].m = c[i-1][j-1].m+1;
-                    if(j == mut[l] && n > l);
 
+    for(i = 0; i < Slen; i++){
+        for(j = 0; j < Slen ; j++){
+            if (S[i] == Si[j] ){
+                    printf("%d,%d -> %d\n", i,j,c[i-1][j-1].m);
+                    c[i][j].v = c[i-1][j-1].v+1;
+                    c[i][j].m = c[i-1][j-1].m;
+            }
+            else
+            if( c[i-1][j].m > c[i][j-1].m ){
+                c[i][j].v = c[i-1][j].v;
+                c[i][j].m = c[i-1][j].m;
+            }
+            else
+            if( c[i-1][j].m == c[i][j-1].m ){
+                if(c[i-1][j].v >= c[i][j-1].v){
+                    c[i][j].v = c[i-1][j].v;
+                    c[i][j].m = c[i-1][j].m;
+                }
+                else{
+                    c[i][j].v = c[i][j-1].v;
+                    c[i][j].m = c[i][j-1].m;
                 }
             }
-            else
-            if(c[i-1][j].m >= c[i][j-1].m)
-            {
-                c[i][j] = c[i-1][j];
-                //b[i][j] = 'v';
-            }
-            else
-            {
-                c[i][j] = c[i][j-1];
-                //b[i][j] = 'h';
+            else{
+                c[i][j].v = c[i][j-1].v;
+                c[i][j].m = c[i][j-1].m;
             }
         }
     }
