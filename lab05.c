@@ -41,8 +41,7 @@ void quickSort_ordena(int *A, int p, int r)
 
 void quickSort(int *A, int n)
 {
-    if(n)
-        quickSort_ordena(A, 0, n-1);
+    quickSort_ordena(A, 0, n-1);
     // Implemente o seu metodo aqui!
 }
 
@@ -55,67 +54,82 @@ int main()
 {
     char S[200], Si[200];
     Titem c[200][200];
-    int Slen, *n, i, j, k, l;
-    int *mut;
+    int Slen, i, j, k, l;
+    int *mut, *n;
     n = malloc(sizeof(int));
 
     scanf("%s", S);
     Slen = strlen(S);
 
     scanf("%d", n);
-    mut = malloc((*n)*sizeof(int));
-    for(k = 0; k < (*n); k++){
-        scanf("%d", &i);
-        mut[k]= i-1;
-    }
     if(n)
-        quickSort(mut, *n);
+    {
+        mut = malloc((*n)*sizeof(int));
+        for(k = 0; k < (*n); k++)
+            scanf("%d", &mut[k]);
+            mut[k] = mut[k] - 1;
+    }
+    //quickSort(mut, n);
+
+    k = 0;
+    l = (*n) - 1;
 
     i = 0;
     for(j = Slen-1; j >=0; j--)
     {
-        Si[i] = S[j];
+        Si[j] = S[i];
         i++;
     }
 
-    for(i = 0; i < Slen; i++){
+    //para cada posição i, qual o maior palindromo até esse i?
+    for(i = -1; i < Slen; i++){
         c[i][-1].v = 0;
         c[i][-1].m = 0;
     }
-    for(j = -1; j < Slen; j++){
+    for(j = -1; j < Slen; j++)
+    {
         c[-1][j].v = 0;
         c[-1][j].m = 0;
     }
-
     for(i = 0; i < Slen; i++){
+        l = (*n) - 1;
         for(j = 0; j < Slen ; j++){
-            if (S[i] == Si[j] ){
-                    printf("%d,%d -> %d\n", i,j,c[i-1][j-1].m);
-                    c[i][j].v = c[i-1][j-1].v+1;
-                    c[i][j].m = c[i-1][j-1].m;
-            }
-            else
-            if( c[i-1][j].m > c[i][j-1].m ){
-                c[i][j].v = c[i-1][j].v;
-                c[i][j].m = c[i-1][j].m;
-            }
-            else
-            if( c[i-1][j].m == c[i][j-1].m ){
-                if(c[i-1][j].v >= c[i][j-1].v){
-                    c[i][j].v = c[i-1][j].v;
-                    c[i][j].m = c[i-1][j].m;
+            printf("k=%d, l=%d, c[i][j].m = %d\n",k, l, c[i][j].m);
+            if (S[i] == Si[j]){
+                if((*n)>0){
+                    if( i == mut[k] && j == Slen-1 - mut[l] ){
+                        c[i][j].v = c[i-1][j-1].v+1;
+                        c[i][j].m = c[i-1][j-1].m+1;
+                        if(j == mut[l] && l > 0)
+                            l--;
+                        if(k == mut[l] && l > 0)
+                            l--;
+                    }
+
+                    else{
+                        c[i][j].v = c[i-1][j-1].v+1;
+                        c[i][j].m = c[i-1][j-1].m;
+                    }
                 }
                 else{
-                    c[i][j].v = c[i][j-1].v;
-                    c[i][j].m = c[i][j-1].m;
+                    c[i][j].v = c[i-1][j-1].v+1;
+                    c[i][j].m = c[i-1][j-1].m;
                 }
             }
+            else
+            if(c[i-1][j].m > c[i][j-1].m){
+                c[i][j] = c[i-1][j];
+            }
+            else
+            if(c[i-1][j].m == c[i][j-1].m){
+                c[i][j] = c[i-1][j].v >= c[i][j-1].v ? c[i-1][j] : c[i][j-1] ;
+            }
             else{
-                c[i][j].v = c[i][j-1].v;
-                c[i][j].m = c[i][j-1].m;
+                c[i][j] = c[i][j-1];
             }
         }
+        if( i == mut[k] - 1 && (*n)-1 > k)
+            k++;
     }
     printf("%d", c[Slen-1][Slen-1].v);
 }
-
