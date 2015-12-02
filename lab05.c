@@ -62,12 +62,13 @@ int main()
     Slen = strlen(S);
 
     scanf("%d", n);
-    if(n)
+    if((*n)>0)
     {
         mut = malloc((*n)*sizeof(int));
-        for(k = 0; k < (*n); k++)
-            scanf("%d", &mut[k]);
-            mut[k] = mut[k] - 1;
+        for(k = 0; k < (*n); k++){
+            scanf("%d", &i);
+            mut[k] = i - 1;
+        }
     }
     //quickSort(mut, n);
 
@@ -85,51 +86,80 @@ int main()
     for(i = -1; i < Slen; i++){
         c[i][-1].v = 0;
         c[i][-1].m = 0;
+        printf("%d ", c[i][-1].m);
     }
     for(j = -1; j < Slen; j++)
     {
         c[-1][j].v = 0;
         c[-1][j].m = 0;
+        printf("%d ", c[-1][j].m);
     }
     for(i = 0; i < Slen; i++){
         l = (*n) - 1;
         for(j = 0; j < Slen ; j++){
-            printf("k=%d, l=%d, c[i][j].m = %d\n",k, l, c[i][j].m);
             if (S[i] == Si[j]){
-                if((*n)>0){
-                    if( i == mut[k] && j == Slen-1 - mut[l] ){
-                        c[i][j].v = c[i-1][j-1].v+1;
-                        c[i][j].m = c[i-1][j-1].m+1;
-                        if(j == mut[l] && l > 0)
-                            l--;
-                        if(k == mut[l] && l > 0)
-                            l--;
-                    }
 
-                    else{
-                        c[i][j].v = c[i-1][j-1].v+1;
+                if((*n) > 0){
+                    printf("\n%d\n", (*n));
+                    if(i == mut[k] && j == (Slen-1) - mut[l]){ // caso 1 = i-ésima letra é uma mutação e j tbm
+                            if(k != l){ // caso 1a, nao correspondem a mesma mutação
+                                c[i][j].v = (c[i-1][j-1].v)+1;
+                                c[i][j].m = (c[i-1][j-1].m)+2;
+                            }
+                            else{       // caso 1b correpondem a mesma mutação
+                                c[i][j].v = (c[i-1][j-1].v)+1;
+                                c[i][j].m = (c[i-1][j-1].m)+1;
+                            }
+                            if(l > 0) l--;
+                            if((*n)-1 > k) k++;
+                    }
+                    else
+                    if(i == mut[k] ){ // caso 2 = i-ésima letra é uma mutação e j nao
+                        c[i][j].v = (c[i-1][j-1].v)+1;
+                        c[i][j].m = (c[i-1][j-1].m)+1;
+                        if((*n)-1 > k) k++;
+                    }
+                    else
+                    if(j == (Slen-1) - mut[l] ){   // caso 3 = j-ésima letra é uma mutação e i nao
+                        c[i][j].v = (c[i-1][j-1].v)+1;
+                        c[i][j].m = (c[i-1][j-1].m)+1;
+                        if(l > 0) l--;
+                    }
+                    else{ // caso 4 = nao é mutação
+                        c[i][j].v = (c[i-1][j-1].v)+1;
                         c[i][j].m = c[i-1][j-1].m;
                     }
                 }
                 else{
-                    c[i][j].v = c[i-1][j-1].v+1;
+                    c[i][j].v = (c[i-1][j-1].v)+1;
                     c[i][j].m = c[i-1][j-1].m;
                 }
             }
             else
             if(c[i-1][j].m > c[i][j-1].m){
-                c[i][j] = c[i-1][j];
+                c[i][j].v = c[i-1][j].v;
+                c[i][j].m = c[i-1][j].m;
             }
             else
             if(c[i-1][j].m == c[i][j-1].m){
-                c[i][j] = c[i-1][j].v >= c[i][j-1].v ? c[i-1][j] : c[i][j-1] ;
+                if(c[i-1][j].v >= c[i][j-1].v)
+                {
+                    c[i][j].v = c[i-1][j].v;
+                    c[i][j].m = c[i-1][j].m;
+                }
+                else{
+                    c[i][j].v = c[i][j-1].v ;
+                    c[i][j].m = c[i][j-1].m ;
+                }
+
             }
             else{
-                c[i][j] = c[i][j-1];
+                c[i][j].v = c[i][j-1].v ;
+                c[i][j].m = c[i][j-1].m ;
             }
+            printf("Slen=%d, i=%d, j=%d, S[i]=%c, Si[j]=%c, c[i][j].v=%d, c[i][j].m=%d ", Slen, i, j, S[i], Si[j], c[i][j].v, c[i][j].m);
+            printf("n=%d, k=%d, l=%d, mut[k]=%d, mut[l]=%d\n", (*n), k, l, mut[k], mut[l]);
         }
-        if( i == mut[k] - 1 && (*n)-1 > k)
-            k++;
     }
     printf("%d", c[Slen-1][Slen-1].v);
 }
