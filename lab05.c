@@ -69,9 +69,8 @@ int main()
                 }
             }
         }
+        j++;
     }
-
-
-
-    printf("\n%d", c[Slen-1][Slen-1]);
 }
+
+
