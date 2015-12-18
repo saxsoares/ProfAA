@@ -71,6 +71,63 @@ int main()
         }
         j++;
     }
+
+
+    for(k = 2; k < Slen; k++){
+        for(i = 0; i < Slen-k ; i++){
+                j = i + k ;
+        if(S[i] == S[j]){
+            if((c[i+1][j-1].m + mut[i]+mut[j] > c[i+1][j].m) &&
+                    (c[i+1][j-1].m+mut[i]+mut[j] > c[i][j-1].m)){
+                c[i][j].v = c[i+1][j-1].v+2;
+                c[i][j].m = c[i+1][j-1].m + mut[i]+mut[j];
+            }
+            else
+            if((c[i+1][j].m > c[i+1][j-1].m + mut[i]+mut[j]) && (c[i+1][j].m > c[i][j-1].m)){
+                c[i][j].v = c[i+1][j].v;
+                c[i][j].m = c[i+1][j].m;
+            }
+            else
+            if((c[i][j-1].m > c[i+1][j-1].m + mut[i]+mut[j]) && c[i][j-1].m > c[i+1][j].m){
+                c[i][j].v = c[i][j-1].v;
+                c[i][j].m = c[i][j-1].m;
+            }
+            else{        // numeros de mutações são iguais
+                if((c[i+1][j-1].v + 2 >= c[i+1][j].v) &&
+                        (c[i+1][j-1].v+2 >= c[i][j-1].v)){
+                    c[i][j].v = c[i+1][j-1].v+2;
+                    c[i][j].m = c[i+1][j-1].m + mut[i]+mut[j];
+                }
+                else
+                if((c[i+1][j].v >= c[i+1][j-1].v + 2) &&
+                        (c[i+1][j].v >= c[i][j-1].v)){
+                    c[i][j].v = c[i+1][j].v;
+                    c[i][j].m = c[i+1][j].m;
+                }
+                else
+                if((c[i][j-1].v >= c[i+1][j-1].m + 2) && c[i][j-1].v >= c[i+1][j].v){
+                    c[i][j].v = c[i][j-1].v;
+                    c[i][j].m = c[i][j-1].m;
+                }
+            }
+        }
+        else{
+            if(c[i+1][j].v >= c[i][j-1].v){
+                c[i][j].v = c[i+1][j].v;
+                c[i][j].m = c[i+1][j].m;
+            }
+            else
+            if(c[i+1][j].v < c[i][j-1].v){
+                c[i][j].v = c[i][j-1].v;
+                c[i][j].m = c[i][j-1].m;
+            }
+        }
+
+        }
+    }
+
+    printf("%d ", c[0][Slen-1].v);
+
 }
 
 
